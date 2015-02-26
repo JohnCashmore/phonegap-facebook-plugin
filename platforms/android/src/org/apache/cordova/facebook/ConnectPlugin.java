@@ -39,6 +39,7 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphObject;
 import com.facebook.model.GraphUser;
+import com.facebook.model.OpenGraphAction;
 import com.facebook.widget.FacebookDialog;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
@@ -392,7 +393,6 @@ public class ConnectPlugin extends CordovaPlugin {
 				cordova.getActivity().runOnUiThread(runnable);
 			} else if (this.method.equalsIgnoreCase("apprequests")) {
 				Runnable runnable = new Runnable() {
-					paramBundle.putString("frictionless", "1");
 					public void run() {
 						WebDialog requestsDialog = (new WebDialog.RequestsDialogBuilder(me.cordova.getActivity(), Session.getActiveSession(), paramBundle)).setOnCompleteListener(dialogCallback)
 							.build();
@@ -406,13 +406,13 @@ public class ConnectPlugin extends CordovaPlugin {
 						public void run() {
 							OpenGraphAction ogAction = GraphObject.Factory.create(OpenGraphAction.class);
 							ogAction.setType(paramBundle.getString("action_type"));
-							String previewPropertyName = null; 
-							try{
+							String previewPropertyName = null;
+							try {
 								JSONObject ogActionProperties = new JSONObject(paramBundle.getString("action_properties"));
 								Iterator<?> iter = ogActionProperties.keys();
 								while (iter.hasNext()) {
 									String key = (String) iter.next();
-									if(previewPropertyName==null){
+									if (previewPropertyName==null) {
 										previewPropertyName = key;
 									}
 									ogAction.setProperty(key.toString(), ogActionProperties.getString(key).toString());
@@ -426,7 +426,7 @@ public class ConnectPlugin extends CordovaPlugin {
 							uiHelper.trackPendingDialogCall(shareDialog.present());
 						}
 					};
-                                this.trackingPendingCall = true;
+                                        this.trackingPendingCall = true;
 					cordova.getActivity().runOnUiThread(runnable);
 				} else {
 					// Fallback. For example, publish the post using the Feed Dialog
